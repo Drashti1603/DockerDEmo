@@ -47,7 +47,7 @@ pipeline {
                     sh 'mvn clean package'
                     def version = (readFile('pom.xml') =~ '<version>(.+)</version>')[0][1]
                     env.IMAGE_NAME = "$version-Build-$BUILD_NUMBER"
-                    sh "docker build -t learnwithparth/spring-boot:${IMAGE_NAME} ."    
+                    sh "docker build -t 20it017/devops_img:${IMAGE_NAME} ."
                     }
             }
         }
@@ -75,7 +75,7 @@ pipeline {
                 script{echo 'deploying the application'
                 withCredentials([usernamePassword(credentialsId: 'docker', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]){
                     sh "echo ${PASSWORD} | docker login -u ${USERNAME} --password-stdin"
-                    sh "docker push learnwithparth/spring-boot:${IMAGE_NAME}"
+                    sh "docker push 20it017/devops_img:${IMAGE_NAME}"
                 }}
                 
              }
@@ -84,7 +84,7 @@ pipeline {
             steps{
                 script{
                     def dockerRestart = 'sudo service docker restart'
-                    def dockerRunCmd = "sudo docker run -p 8080:8080 -d learnwithparth/spring-boot:${IMAGE_NAME}"
+                    def dockerRunCmd = "sudo docker run -p 8080:8080 -d 20it017/devops_img:${IMAGE_NAME}"
                   sshagent(['ec2-prod']) {
                         sh "ssh -o StrictHostKeyChecking=no ec2-user@54.237.0.178 ${dockerRunCmd}"
                     }  
