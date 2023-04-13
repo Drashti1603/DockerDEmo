@@ -64,7 +64,7 @@ pipeline {
                 sh 'mvn test'}
             }
         }
-      stage('push') {
+      stage('deploy') {
         // input{
         //     message "Select the environment to deploy"
         //     ok "done"
@@ -82,18 +82,7 @@ pipeline {
                 
              }
         }
-        stage('deploy'){
-            steps{
-                script{
-                    def dockerRestart = 'sudo service docker restart'
-                    def dockerRunCmd = "sudo docker run -p 8080:8080 -d 20it017/devops_img:${IMAGE_NAME}"
-                  sshagent(['ec2-prod']) {
-                        sh "ssh -o StrictHostKeyChecking=no ec2-user@54.237.0.178 ${dockerRunCmd}"
-                    }  
-                }
-            }
-        }
-
+       
         // stage('commit and push to git'){
         //     steps{
         //         script{
